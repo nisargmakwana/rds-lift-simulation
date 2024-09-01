@@ -119,4 +119,7 @@ hr {
     height: 100%;
     width: 10rem;
     background-color: blueviolet;
+    transition: transform 4s ease;
+    transform: translateY(-13rem);
+    z-index: 1;
 }
