@@ -13,7 +13,7 @@ body {
     font-family: sans-serif;
 }
 
-/*Home Input Style*/
+/*Input Style*/
 
 input {
     font-size: 1.8rem;
@@ -26,7 +26,7 @@ label {
     width: 16.3rem;
 }
 
-.grid-container {
+.input-view {
     display: grid;
     height: 100vh;
     place-content: center;
@@ -64,11 +64,15 @@ label {
 
 /*Main App Style*/
 
+.app-view {
+    display: flex;
+    min-height: 100vh;
+}
+
 .app-container {
-    height: 100vh;
     display: flex;
     flex-direction: column-reverse;
-    justify-content: center;
+    width: auto;
 }
 
 .floor-element {
@@ -76,7 +80,7 @@ label {
     height: 13rem;
     background-color: aquamarine;
     position: relative;
-    width: 80%;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -111,13 +115,13 @@ hr {
 .floor-section {
     margin-left: 20rem;
     display: flex;
-    width: 100%;
-    justify-content: space-around;
+    /* justify-content: space-around; */
 }
 
 .lift {
     height: 100%;
     width: 10rem;
+    margin-right: 7rem;
     background-color: blueviolet;
     transition: transform 4s ease;
     transform: translateY(-13rem);
