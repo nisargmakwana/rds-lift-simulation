@@ -10,29 +10,33 @@ const inputViewEl = document.querySelector(".input-view");
 
 const inputStatus = {};
 const lifts = [];
-function setInitialStateAndRender() {
+function main(e) {
+	// Rendering
+	// e.preventDefault();
 	inputStatus.floorCount = floorInputEl.value;
 	inputStatus.liftCount = liftInputEl.value;
-	for (let i = 0; i < inputStatus.liftCount; i++) {
+	for (let i = 0; i < 3; i++) {
 		lifts.push({ index: i + 1, position: 1, busy: false });
 	}
 
 	const liftHTML = (function getLiftString() {
 		let string = "";
-		for (let i = 0; i < inputStatus.liftCount; i++) {
+		for (let i = 0; i < 3; i++) {
 			string += `<div class="lift" data-number=${i + 1}>lift</div>`;
 		}
 		return string;
 	})();
 
 	(function render() {
-		for (let i = 0; i < inputStatus.floorCount; i++) {
+		for (let i = 0; i < 3; i++) {
 			if (i + 1 == 1) {
 				appViewEl.insertAdjacentHTML(
 					"beforeend",
 					` <div class="floor-element">
                 <div>
-                    <button class="btn-up" data-btnNumber=${i + 1}>Up</button>
+                    <button class="lift-btn btn-up" data-btnnumber=${
+											i + 1
+										}>Up</button>
                     <hr>
                 </div>
                 <div class="floor-section">
@@ -45,7 +49,7 @@ function setInitialStateAndRender() {
 					"beforeend",
 					`<div class="floor-element">
                 <div>
-                    <button class="btn-down" data-btnNumber=${
+                    <button class="lift-btn btn-down" data-btnnumber=${
 											i + 1
 										}>Down</button>
                     <hr>
@@ -58,8 +62,10 @@ function setInitialStateAndRender() {
 					"beforeend",
 					`<div class="floor-element">
                 <div>
-                    <button class="btn-up" data-btnNumber=${i + 1}>Up</button>
-                    <button class="btn-down" data-btnNumber=${
+                    <button class="lift-btn btn-up" data-btnnumber=${
+											i + 1
+										}>Up</button>
+                    <button class="lift-btn btn-down" data-btnnumber=${
 											i + 1
 										}>Down</button>
                     <hr>
@@ -68,10 +74,37 @@ function setInitialStateAndRender() {
             </div>`
 				);
 			}
-			console.log(i);
 		}
 	})();
-	inputViewEl.classList.add("hidden");
-}
+	// inputViewEl.classList.add("hidden");
 
-simulateBtnEl.addEventListener("click", setInitialStateAndRender);
+	// Attaching event listeners to lift buttons
+	const floorBtnsEl = document.querySelectorAll(".lift-btn");
+	const liftPos = Array.from(lifts, (lift) => lift.position);
+	floorBtnsEl.forEach((el) =>
+		el.addEventListener("click", (e) => {
+			const btnNumber = e.target.dataset.btnnumber;
+			const availableLift = lifts.find((lift) => lift.busy === false);
+			availableLift.busy = true;
+			setTimeout(() => {
+				availableLift.busy = false;
+			}, 6.5 * 1000);
+			function calcTargetDistance(btnNumber) {
+				// console.log(btnNumber);
+
+				// console.log(availableLift);
+
+				const remDistance = (btnNumber - liftPos[availableLift.position]) * 13;
+				return remDistance;
+			}
+			const targetDistance = -calcTargetDistance(btnNumber);
+			// console.log(targetDistance);
+			const lift = document.querySelector(
+				`div[data-number="${availableLift.index}"]`
+			);
+			lift.style.transform = `translateY(${targetDistance}rem)`;
+		})
+	);
+}
+main();
+// simulateBtnEl.addEventListener("click", main);

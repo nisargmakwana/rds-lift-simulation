@@ -124,6 +124,6 @@ hr {
     margin-right: 7rem;
     background-color: blueviolet;
     transition: transform 4s ease;
-    transform: translateY(-13rem);
+    /* transform: translateY(-13rem); */
     z-index: 1;
 }
