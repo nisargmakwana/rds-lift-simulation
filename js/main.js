@@ -211,7 +211,7 @@ function main(e) {
 			setTimeout(doorsClose, 2.5 * 1000);
 		} else {
 			lift.style.transform = `translateY(${targetDistance}rem)`;
-			lift.style.transition = `transform ${transitionTime}s ease`;
+			lift.style.transition = `transform ${transitionTime}s linear`;
 			setTimeout(doorsOpen, transitionTime * 1000);
 			setTimeout(doorsClose, (transitionTime + 2.5) * 1000);
 		}

@@ -159,7 +159,7 @@ hr {
 
 .door.left.open {
     width: 0%;
-    transition: width 2.5s ease-in-out;
+    transition: width 2.5s ease;
 }
 
 .door.left.close {
@@ -169,7 +169,7 @@ hr {
 
 .door.right.open {
     width: 0%;
-    transition: width 2.5s ease-in-out;
+    transition: width 2.5s ease;
 }
 
 .door.right.close {
