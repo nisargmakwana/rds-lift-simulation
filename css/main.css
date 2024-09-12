@@ -159,22 +159,22 @@ hr {
 
 .door.left.open {
     width: 0%;
-    transition: width 2.5s ease;
+    transition: width 2.5s linear;
 }
 
 .door.left.close {
     width: 44%;
-    transition: width 2.5s ease;
+    transition: width 2.5s linear;
 }
 
 .door.right.open {
     width: 0%;
-    transition: width 2.5s ease;
+    transition: width 2.5s linear;
 }
 
 .door.right.close {
     width: 44%;
-    transition: width 2.5s ease;
+    transition: width 2.5s linear;
 }
 
 .door.right {
