@@ -1,4 +1,4 @@
-// selecting all elements
+// SELECTING ALL ELEMENTS
 
 const floorInputEl = document.getElementById("floor-input");
 const liftInputEl = document.getElementById("lift-input");
@@ -6,17 +6,42 @@ const simulateBtnEl = document.querySelector(".simulate-btn");
 const appViewEl = document.querySelector(".app-container");
 const inputViewEl = document.querySelector(".input-view");
 
-// Setting up input state, lifts, and rendering
+// GLOBAL VARIABLES
 const inputStatus = {};
 const lifts = [];
+const delayedClick = new Event("delayedClick");
 
+// MAIN FUNCTION
 function main(e) {
 	e.preventDefault();
+	class Queue {
+		constructor() {
+			this.queue = [];
+			this.isProcessing = false;
+		}
+		addBtnElement(el) {
+			this.queue.push(el);
+		}
+		async processQueue() {
+			if (this.isProcessing && this.queue.length == 0) return;
+			this.isProcessing = true;
+			const { target } = this.queue.shift();
+			// console.log(targetBtn);
+			target.addEventListener("delayedClick", handleFloorBtns);
+			await target.dispatchEvent(delayedClick);
+			this.isProcessing = false;
+		}
+	}
+	const extraBtnClicks = new Queue();
 	const floorCount = Number(floorInputEl.value);
 	const liftCount = Number(liftInputEl.value);
-	console.log(floorCount, liftCount);
 
-	// Validation
+	function storedEventsHandler(e) {
+		extraBtnClicks.addBtnElement({ target: e.target });
+		e.target.disabled = true;
+	}
+
+	// validation
 	if (
 		floorCount === 1 ||
 		floorCount === e ||
@@ -30,9 +55,10 @@ function main(e) {
 		liftInputEl.value = "";
 		return;
 	}
-	// Rendering
 	inputStatus.floorCount = floorInputEl.value;
 	inputStatus.liftCount = liftInputEl.value;
+
+	// rendering
 	for (let i = 0; i < inputStatus.liftCount; i++) {
 		lifts.push({ index: i + 1, position: 1, busy: false });
 	}
@@ -101,14 +127,15 @@ function main(e) {
 	})();
 	inputViewEl.classList.add("hidden");
 
-	// Attaching event listeners to lift buttons
+	// event handler
 	const floorBtnsEl = document.querySelectorAll(".lift-btn");
-	const handleFloorBtns = function (e) {
-		// console.log(lifts);
 
+	function handleFloorBtns(e) {
+		// getting button numbers and type (up or down)
 		const btnNumberType = Number(e.target.dataset.btnnumber);
 		const btnNumber = Math.floor(Number(e.target.dataset.btnnumber));
 
+		// adding a lift's distance from called floor
 		(function addingLiftDistancesFromCalledFloor() {
 			lifts.map(
 				(lift) =>
@@ -116,6 +143,7 @@ function main(e) {
 			);
 		})();
 
+		// getting the available lift
 		const availableLift = lifts.reduce(
 			(min, lift) => {
 				if (
@@ -127,31 +155,43 @@ function main(e) {
 				return min;
 			},
 			{
-				distanceFromCalledFloor: 1000,
+				distanceFromCalledFloor: 1000000000000,
 				busy: false,
 			}
 		);
-		console.log(lifts);
 
+		if (!availableLift.index) {
+			storedEventsHandler(e);
+			return;
+		}
+
+		// lift action starts from here
 		availableLift.busy = true;
+
 		const transitionTime = 2 * Math.abs(availableLift.position - btnNumber);
 		const clickedBtn = document.querySelector(
-			`[data-btnnumber='${btnNumberType}'`
+			`[data-btnnumber='${btnNumberType}']`
 		);
-
 		clickedBtn.disabled = true;
+
+		// updating the lift's state after complete execution
 		setTimeout(() => {
 			availableLift.busy = false;
 			availableLift.position = btnNumber;
 			clickedBtn.disabled = false;
+			if (extraBtnClicks.queue.length > 0) {
+				extraBtnClicks.processQueue();
+			}
 		}, (transitionTime + 5) * 1000);
 		const targetDistance = -(btnNumber - 1) * 13;
 		const lift = document.querySelector(
 			`div[data-number="${availableLift.index}"]`
 		);
-		// console.log(availableLift.position, btnNumber);
 
+		// selecting lift children (doors)
 		const liftDoorsEl = lift.children;
+
+		// door open and close animation
 		function doorsOpen() {
 			liftDoorsEl[0].classList.remove("close");
 			liftDoorsEl[1].classList.remove("close");
@@ -164,6 +204,8 @@ function main(e) {
 			liftDoorsEl[0].classList.add("close");
 			liftDoorsEl[1].classList.add("close");
 		}
+
+		// 2 cases: when lift is on the called floor and otherwise
 		if (availableLift.position === btnNumber) {
 			doorsOpen();
 			setTimeout(doorsClose, 2.5 * 1000);
@@ -173,8 +215,7 @@ function main(e) {
 			setTimeout(doorsOpen, transitionTime * 1000);
 			setTimeout(doorsClose, (transitionTime + 2.5) * 1000);
 		}
-	};
+	}
 	floorBtnsEl.forEach((el) => el.addEventListener("click", handleFloorBtns));
 }
-
 simulateBtnEl.addEventListener("click", main);
