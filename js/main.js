@@ -51,8 +51,6 @@ function main(e) {
 		alert(
 			"You require more than 1 floors for this lift simulation OR invalid input"
 		);
-		floorInputEl.value = "";
-		liftInputEl.value = "";
 		return;
 	}
 	inputStatus.floorCount = floorInputEl.value;
