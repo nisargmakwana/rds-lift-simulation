@@ -33,8 +33,8 @@ function main(e) {
 		}
 	}
 	const extraBtnClicks = new Queue();
-	const floorCount = Number(floorInputEl.value);
-	const liftCount = Number(liftInputEl.value);
+	const floorCount = Math.floor(Number(floorInputEl.value));
+	const liftCount = Math.floor(Number(liftInputEl.value));
 
 	function storedEventsHandler(e) {
 		extraBtnClicks.addBtnElement({ target: e.target });
@@ -53,8 +53,8 @@ function main(e) {
 		);
 		return;
 	}
-	inputStatus.floorCount = floorInputEl.value;
-	inputStatus.liftCount = liftInputEl.value;
+	inputStatus.floorCount = Math.floor(floorInputEl.value);
+	inputStatus.liftCount = Math.floor(liftInputEl.value);
 
 	// rendering
 	for (let i = 0; i < inputStatus.liftCount; i++) {
